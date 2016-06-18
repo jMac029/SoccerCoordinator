@@ -25,3 +25,7 @@ players.append(["name" : "Phillip Helm", "height": 44, "experience": true, "guar
 players.append(["name" : "Les Clay", "height": 42, "experience": true, "guardian": "Wynonna Brown"])
 players.append(["name" : "Herschel Krustofski", "height": 45, "experience": true, "guardian": "Hyman and Rachel Krustofski"])
 
+// The player data could have been accomplished in a class or struct as it is a more complex data structure
+
+
+//Step Two: Sorting and Assigning Players to the three teams
