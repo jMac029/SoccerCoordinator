@@ -1,8 +1,8 @@
 //Soccer Coordinator : Treehouse iOS TechDegree Project 1
 
-//Step One: Player Data into a collection, my choice an immutable array of dictionaires
+//Step One: Player Data into a collection, my choice an mutable array of dictionaires
 
-let allPlayers: [[String : Any]] = [
+var allPlayers: [[String : Any]] = [
     
     ["name" : "Joe Smith", "height": 42.0, "experience": true, "guardian": "Jim and Jan Smith"],
     ["name" : "Jill Tanner", "height": 36.0, "experience": true, "guardian": "Clara Tanner"],
@@ -28,22 +28,77 @@ let allPlayers: [[String : Any]] = [
 // The player data could have been accomplished in a class or struct as it is a more complex data structure
 
 
-//Step Two: Sorting and Assigning Players into the three teams
+//Step Two: Sorting and Grouping Players into the three teams
 
-//Constant for number of teams
+//temporary global variable to keep trip of players current team
+var currentTeam = 0
 
-let numberOfTeams = 3
+// Dictionary of teams in order to sort and group the players into them
 
-//Dividing players into even amount of players per team
+var soccerTeams: [Dictionary<String, Any>] = [
+    ["name": "Dragons", "practiceDay": "March 17, 13:00"],
+    ["name": "Sharks", "practiceDay": "March 17, 15:00"],
+    ["name": "Raptors", "practiceDay": "March 18, 13:00"]
+]
 
-var playersPerTeam: Int = allPlayers.count / numberOfTeams
+//Function to group players by experience and height
 
-// for in loop counting players with experience and without
+func playerGrouping() {
+    
+    //variables for experienced and noExpereienced players
+    var experienced: [[Any]] = []
+    var noExperience: [[Any]] = []
+    
+    //temporary variable to keep track of loop
+    var loopCount = 0
+    
+    //for in loop to go through allPlayers array to group players by height and experience
+    
+    for player in allPlayers {
+        
+        if player["experience"] as! Bool {
+            experienced.append([loopCount, player["height"]])
+        } else {
+            noExperience.append([loopCount, player["height"]])
+        }
+        
+        loopCount += 1
+    }
+    
+    //Assiging players sorted by height and experience
+    let sortedByHeightExperienced = experienced.sort { ($0[1] as? Double) > ($1[1] as? Double) }
+    let sortedByHeightNoExperience = noExperience.sort { ($0[1] as? Double) < ($1[1] as? Double) }
+    
+    playerSorting(sortedByHeightExperienced)
+    playerSorting(sortedByHeightNoExperience)
+}
 
-var playersWXp = [0]
-var playersNoXp = [0]
-var counter = 0
+// Function to sort players into the three teams evenly
 
+func playerSorting(playerGrouping: [[Any]]) {
+    
+    for player in playerGrouping {
+        
+        allPlayers[player[0] as! Int]["teamAssignment"] = currentTeam
+        currentTeam += 1
+        
+        if currentTeam == soccerTeams.count {
+            currentTeam = 0
+        }
+    }
+    
+}
 
+//This function to group and sort players by experience and height, this might have been better done in a protocol?
 
+//Step Three: Send letters to guardian
+func sendLetters() {
+    for player in allPlayers {
+        
+        print("Greetings \(player["guardian"]!)! \n\nYour human offspring, \(player["name"]!) has been chosen to play on team \(soccerTeams[player["teamAssignment"] as! Int]["name"]!) in the Galatic Federation of Youth Soccer - under 48 human inches league(GFYS-U48).\nFirst practice is \(soccerTeams[player["teamAssignment"] as! Int]["practiceDay"]!) at Bonzai Beach on the island of Austrailia located on the Planet Earth, Sector ZZ9 Plural Z Alpha. Directions are available at your local directional planning office.\n\n Sincerley, \n GFYS-U48 Coordination Committee, Vogsphere \n\nGo \(soccerTeams[player["teamAssignment"] as! Int]["name"]!)!")
+    }
+}
 
+playerGrouping()
+sendLetters()
+allPlayers
